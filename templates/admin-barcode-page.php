@@ -51,10 +51,16 @@ $selected_fields = $settings['default_fields'];
                     <input type="checkbox" name="variation_ids[]" value="<?php echo esc_attr( $entry['id'] ); ?>" <?php checked( $entry['checked'] ); ?>>
                     <span><?php echo esc_html( $entry['label'] ); ?></span>
                     <?php if ( $entry['sku'] ) : ?>
-                      <span style="color:#555;">&nbsp;<?php printf( esc_html__( '(SKU: %s)', 'woo-sku-barcode' ), esc_html( $entry['sku'] ) ); ?></span>
+                      <span style="color:#555;">&nbsp;<?php
+                      /* translators: %s: variation SKU. */
+                      printf( esc_html__( '(SKU: %s)', 'woo-sku-barcode' ), esc_html( $entry['sku'] ) );
+                      ?></span>
                     <?php endif; ?>
                     <?php if ( null !== $entry['stock'] ) : ?>
-                      <span style="color:#555;">&nbsp;<?php printf( esc_html__( 'Stock: %s', 'woo-sku-barcode' ), esc_html( $entry['stock'] ) ); ?></span>
+                      <span style="color:#555;">&nbsp;<?php
+                      /* translators: %s: current stock quantity. */
+                      printf( esc_html__( 'Stock: %s', 'woo-sku-barcode' ), esc_html( $entry['stock'] ) );
+                      ?></span>
                     <?php endif; ?>
                   </label>
                 <?php endforeach; ?>
@@ -93,7 +99,10 @@ $selected_fields = $settings['default_fields'];
               <input type="checkbox" name="print_stock" value="1" <?php checked( $settings['print_per_stock'] ); ?>>
               <?php esc_html_e( 'Print one label per stock unit', 'woo-sku-barcode' ); ?>
             </label>
-            <p class="description"><?php printf( esc_html__( 'Current batch limit: %d labels.', 'woo-sku-barcode' ), esc_html( $settings['max_labels_per_batch'] ) ); ?></p>
+            <p class="description"><?php
+            /* translators: %d: maximum number of labels allowed per batch. */
+            printf( esc_html__( 'Current batch limit: %d labels.', 'woo-sku-barcode' ), esc_html( $settings['max_labels_per_batch'] ) );
+            ?></p>
           </td>
         </tr>
       </tbody>

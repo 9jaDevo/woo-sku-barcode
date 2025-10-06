@@ -25,4 +25,5 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           slug: woo-sku-barcode
+          exclude-directories: lib
 

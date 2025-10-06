@@ -216,10 +216,13 @@ class Admin {
     }
 
     public function maybe_render_notices() : void {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Admin notice state is read-only output and values are sanitized below.
         $notice = isset( $_GET['wsbm_notice'] ) ? sanitize_text_field( wp_unslash( $_GET['wsbm_notice'] ) ) : '';
 
         if ( 'sku-generated' === $notice ) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Count parameter is read-only and sanitized here.
             $count = isset( $_GET['wsbm_count'] ) ? absint( wp_unslash( $_GET['wsbm_count'] ) ) : 0;
+            /* translators: %d: number of SKUs that were generated. */
             printf(
                 '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
                 esc_html( sprintf( _n( '%d SKU generated.', '%d SKUs generated.', $count, 'woo-sku-barcode' ), $count ) )
@@ -227,7 +230,9 @@ class Admin {
         }
 
         if ( 'cache-cleared' === $notice ) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Count parameter is read-only and sanitized here.
             $count = isset( $_GET['wsbm_count'] ) ? absint( wp_unslash( $_GET['wsbm_count'] ) ) : 0;
+            /* translators: %d: number of cached barcode images removed. */
             printf(
                 '<div class="notice notice-info is-dismissible"><p>%s</p></div>',
                 esc_html( sprintf( _n( '%d cached barcode removed.', '%d cached barcodes removed.', $count, 'woo-sku-barcode' ), $count ) )
@@ -262,11 +267,13 @@ class Admin {
             wp_die( esc_html__( 'You do not have permission to access this page.', 'woo-sku-barcode' ) );
         }
 
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Query params only prefill the UI and are sanitized.
         $pid     = isset( $_GET['product_id'] ) ? absint( $_GET['product_id'] ) : 0;
         $product = $pid ? wc_get_product( $pid ) : null;
 
         $requested_ids = [];
         if ( ! empty( $_GET['items'] ) ) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Items parameter preselects checkboxes and is sanitized.
             $raw = explode( ',', sanitize_text_field( wp_unslash( $_GET['items'] ) ) );
             foreach ( $raw as $maybe_id ) {
                 $id = absint( $maybe_id );
