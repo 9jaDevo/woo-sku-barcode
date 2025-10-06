@@ -1,4 +1,4 @@
-            - name: WordPress Plugin Check
+- name: WordPress Plugin Check
   # You may pin to the exact commit or the version.
   # uses: WordPress/plugin-check-action@70f38272b2beee386e973f319591baa2fc7dff16
   uses: WordPress/plugin-check-action@v1.1.2
