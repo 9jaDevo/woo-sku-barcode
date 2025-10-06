@@ -1,20 +1,24 @@
-name: WordPress Plugin Check
+name: 'WordPress Plugin Check'
 
 on:
+  pull_request:
   push:
     branches:
+      - master
       - main
-  pull_request:
-    branches:
-      - main
+      - 'releases/*'
 
 jobs:
   plugin-check:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out repository
+      - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Exclude hidden files
+        run: |
+          find . -type f -name ".*" -exec rm -f {} \;
 
       - name: Run WordPress Plugin Check
         uses: WordPress/plugin-check-action@v1.1.2
