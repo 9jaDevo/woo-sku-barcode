@@ -36,8 +36,8 @@ class Autoloader {
             return;
         }
 
-        $relative_class = substr( $class, strlen( self::PREFIX ) );
-        $relative_path  = 'class-' . strtolower( str_replace( '\\', '-', $relative_class ) ) . '.php';
+    $relative_class = substr( $class, strlen( self::PREFIX ) );
+    $relative_path  = 'class-wsbm-' . strtolower( str_replace( '\\', '-', $relative_class ) ) . '.php';
         $file           = $this->base_dir . $relative_path;
 
         if ( file_exists( $file ) ) {
