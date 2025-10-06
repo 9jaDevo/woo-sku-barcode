@@ -30,7 +30,7 @@ For detailed installation steps, FAQs, screenshots, and the changelog, see the c
 Run the plugin check locally via Docker or WP-CLI:
 
 ```bash
-wp plugin check woo-sku-barcode --strict
+wp plugin check sku-barcode-manager-for-woocommerce --strict
 ```
 
 Feel free to add unit or integration tests under a `tests/` directory (not yet present) and wire them into GitHub Actions as needed.

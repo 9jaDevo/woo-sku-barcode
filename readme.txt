@@ -26,7 +26,7 @@ SKU & Barcode Manager for WooCommerce keeps product identifiers in sync and deli
 
 == Installation ==
 
-1. Upload the `woo-sku-barcode` folder to the `/wp-content/plugins/` directory, or install via the Plugins screen by searching for "Woo SKU & Barcode Manager".
+1. Upload the `sku-barcode-manager-for-woocommerce` folder to the `/wp-content/plugins/` directory, or install via the Plugins screen by searching for "Woo SKU & Barcode Manager".
 2. Activate the plugin through the **Plugins** screen in WordPress.
 3. Navigate to **WooCommerce > Barcodes** to configure and print labels.
 4. Optional: Visit **WooCommerce > Barcode Settings** to adjust defaults and maintenance options.

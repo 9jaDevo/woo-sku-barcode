@@ -24,6 +24,6 @@ jobs:
         uses: WordPress/plugin-check-action@v1.1.2
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          slug: woo-sku-barcode
+          slug: sku-barcode-manager-for-woocommerce
           exclude-directories: lib
 
