@@ -1,74 +1,44 @@
-=== Woo SKU & Barcode Manager ===
-Contributors: 9jaDevo
-Donate link: https://github.com/9jaDevo
-Tags: sku, barcode, woocommerce, inventory, labels
-Requires at least: 5.8
-Tested up to: 6.6
-Requires PHP: 7.4
-Stable tag: 2.0.0
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+# SKU & Barcode Manager for WooCommerce
 
-Auto-generate 11-digit SKUs, print professional barcode labels, and streamline WooCommerce inventory workflows.
+SKU & Barcode Manager for WooCommerce keeps WooCommerce catalog data tidy by auto-generating 11-digit SKUs and producing print-ready barcode labels. The project ships as a WordPress plugin and bundles TCPDF plus Picqer barcode helpers for offline-friendly PDFs.
 
-== Description ==
+## Features
 
-Woo SKU & Barcode Manager keeps product identifiers in sync and delivers PDF-ready barcode labels in a couple of clicks. The plugin automatically assigns deterministic 11-digit SKUs to products and variations, supports selective label printing, and leverages TCPDF for high quality output that works with popular label sizes.
+- Deterministic 11-digit SKU generation for products and variations.
+- Enhanced product picker powered by WooCommerce SelectWoo with variation filtering.
+- PDF label output with popular page sizes (40x30 mm, 52x25 mm, 100x50 mm).
+- Optional per-stock duplication and cached barcode assets for quick reprints.
+- Settings page for defaults, batch limits, and cache maintenance.
 
-= Highlights =
+## Getting Started
 
-- Enforce consistent 11-digit SKU patterns across simple and variable products.
-- Search and select products or individual variations via the WooCommerce enhanced select UI.
-- Generate paginated barcode PDFs using bundled TCPDF and Picqer libraries.
-- Control label size, printed fields, and per-stock duplication from a single admin screen.
-- Cache generated barcode images under `wp-content/uploads` for faster repeat jobs.
-- Manage defaults (label size, fields, batch limits) and clear caches through a dedicated settings page.
+1. Clone or download this repository into `wp-content/plugins/` inside your development site.
+2. Activate **Woo SKU & Barcode Manager** from the WordPress admin Plugins screen.
+3. Open **WooCommerce > Barcodes** to generate labels, or **WooCommerce > Barcode Settings** to configure defaults.
 
-== Installation ==
+For detailed installation steps, FAQs, screenshots, and the changelog, see the companion [readme.txt](readme.txt) that follows the WordPress.org plugin readme specification.
 
-1. Upload the `woo-sku-barcode` folder to the `/wp-content/plugins/` directory, or install via the Plugins screen by searching for "Woo SKU & Barcode Manager".
-2. Activate the plugin through the **Plugins** screen in WordPress.
-3. Navigate to **WooCommerce > Barcodes** to configure and print labels.
-4. Optional: Visit **WooCommerce > Barcode Settings** to adjust defaults and maintenance options.
+## Development
 
-== Frequently Asked Questions ==
+- Autoloaded classes live under `includes/` and follow the `WSBM\` namespace.
+- The barcode generation form and settings UI render from PHP templates in `templates/`.
+- Third-party libraries (TCPDF and Picqer) are bundled under `lib/` and excluded from coding-standard checks.
+- Continuous integration runs the official [WordPress Plugin Check](https://github.com/WordPress/plugin-check-action) workflow on pushes and pull requests.
 
-= Will the plugin overwrite existing SKUs? =
-No. Existing SKUs remain untouched. Automatic generation only runs when a product or variation lacks a SKU.
+### Coding Standards
 
-= Can I print barcodes for specific variations? =
-Yes. Use the variation checklist that appears once a variable product is selected to include or exclude individual variations.
+Run the plugin check locally via Docker or WP-CLI:
 
-= Where are barcode images stored? =
-Generated barcode PNG files are cached in `wp-content/uploads/woo-sbm-cache`. You can clear them from the settings page.
+```bash
+wp plugin check woo-sku-barcode --strict
+```
 
-= How many labels can I create at once? =
-The default batch limit is 500 labels. You can change this value under **WooCommerce > Barcode Settings**.
+Feel free to add unit or integration tests under a `tests/` directory (not yet present) and wire them into GitHub Actions as needed.
 
-== Screenshots ==
+## Contributing
 
-1. Admin barcode page with product selector and label options.
-2. Barcode settings screen with default preferences and cache controls.
-3. Sample 40x30 mm label output featuring SKU, price, and barcode.
+Issues and pull requests are welcome. Please open a discussion describing the change, keep code comments succinct, and follow the repository’s PHP style (WordPress Coding Standards).
 
-== Changelog ==
+## License
 
-= 2.0.0 =
-- Introduced modular architecture with autoloaded classes and templates.
-- Added settings screen for label defaults and cache clearing.
-- Improved variation selection, SKU generation reliability, and label batching.
-- Hardened AJAX endpoints and admin notices.
-
-= 1.3.1 =
-- Ensured variation SKU auto-generation and bulk SKU creation.
-- Added multi-product selection, variation filtering, and bulk print action.
-- Patched barcode rendering edge cases in PDF output.
-
-== Upgrade Notice ==
-
-= 2.0.0 =
-Refactor introduces new settings and caching paths. After upgrading, visit **WooCommerce > Barcode Settings** to verify defaults and clear caches if necessary.
-
-== License ==
-
-This plugin is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.
+GPL-2.0-or-later. See the header in [readme.txt](readme.txt) for full licensing details.

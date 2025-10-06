@@ -86,7 +86,7 @@ class Manager {
         $files   = glob( trailingslashit( $dir ) . '*.png' );
         if ( $files ) {
             foreach ( $files as $file ) {
-                if ( unlink( $file ) ) {
+                if ( wp_delete_file( $file ) ) {
                     $removed++;
                 }
             }
@@ -176,7 +176,7 @@ class Manager {
 
     public function ajax_render_labels() : void {
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
-            wp_die( esc_html__( 'You do not have permission to perform this action.', 'woo-sku-barcode' ), '', [ 'response' => 403 ] );
+            wp_die( esc_html__( 'You do not have permission to perform this action.', 'sku-barcode-manager-for-woocommerce' ), '', [ 'response' => 403 ] );
         }
 
         $pid = isset( $_POST['product_id'] ) ? absint( wp_unslash( $_POST['product_id'] ) ) : 0;
@@ -242,7 +242,7 @@ class Manager {
         }
 
         if ( empty( $raw_items ) ) {
-            wp_die( esc_html__( 'No products selected for printing.', 'woo-sku-barcode' ), '', [ 'response' => 400 ] );
+            wp_die( esc_html__( 'No products selected for printing.', 'sku-barcode-manager-for-woocommerce' ), '', [ 'response' => 400 ] );
         }
 
         $items   = [];
@@ -251,7 +251,7 @@ class Manager {
         foreach ( $raw_items as $product ) {
             $quantity = $print_stock ? max( 1, (int) $product->get_stock_quantity() ) : 1;
             if ( $quantity + count( $items ) > $max_run ) {
-                wp_die( esc_html__( 'Label request exceeds the configured batch limit. Reduce quantity or disable per-stock printing.', 'woo-sku-barcode' ), '', [ 'response' => 400 ] );
+                wp_die( esc_html__( 'Label request exceeds the configured batch limit. Reduce quantity or disable per-stock printing.', 'sku-barcode-manager-for-woocommerce' ), '', [ 'response' => 400 ] );
             }
             for ( $i = 0; $i < $quantity; $i++ ) {
                 $items[] = $product;
@@ -265,7 +265,7 @@ class Manager {
             if ( file_exists( $tcpdf_path ) ) {
                 require_once $tcpdf_path;
             } else {
-                wp_die( esc_html__( 'Unable to load TCPDF library.', 'woo-sku-barcode' ), '', [ 'response' => 500 ] );
+                wp_die( esc_html__( 'Unable to load TCPDF library.', 'sku-barcode-manager-for-woocommerce' ), '', [ 'response' => 500 ] );
             }
         }
 

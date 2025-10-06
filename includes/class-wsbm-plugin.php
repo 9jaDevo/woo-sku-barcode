@@ -45,13 +45,8 @@ class Plugin {
     }
 
     private function register_hooks() : void {
-        add_action( 'init', [ $this, 'load_textdomain' ] );
         add_action( 'plugins_loaded', [ $this, 'bootstrap_components' ] );
         register_activation_hook( WSBM_PLUGIN_FILE, [ $this, 'on_activate' ] );
-    }
-
-    public function load_textdomain() : void {
-        load_plugin_textdomain( 'woo-sku-barcode', false, dirname( plugin_basename( WSBM_PLUGIN_FILE ) ) . '/languages' );
     }
 
     public function bootstrap_components() : void {

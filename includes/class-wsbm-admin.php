@@ -35,8 +35,8 @@ class Admin {
     }
 
     public function register_bulk_actions( array $actions ) : array {
-        $actions['wsbm_generate_sku']  = __( 'Generate missing SKUs', 'woo-sku-barcode' );
-        $actions['wsbm_print_barcodes'] = __( 'Print barcodes', 'woo-sku-barcode' );
+        $actions['wsbm_generate_sku']  = __( 'Generate missing SKUs', 'sku-barcode-manager-for-woocommerce' );
+        $actions['wsbm_print_barcodes'] = __( 'Print barcodes', 'sku-barcode-manager-for-woocommerce' );
         return $actions;
     }
 
@@ -90,15 +90,15 @@ class Admin {
             admin_url( 'admin.php' )
         );
 
-        $actions['wsbm_print'] = '<a href="' . esc_url( $url ) . '">' . esc_html__( 'Print barcodes', 'woo-sku-barcode' ) . '</a>';
+        $actions['wsbm_print'] = '<a href="' . esc_url( $url ) . '">' . esc_html__( 'Print barcodes', 'sku-barcode-manager-for-woocommerce' ) . '</a>';
         return $actions;
     }
 
     public function register_menu() : void {
         add_submenu_page(
             'woocommerce',
-            __( 'Print Barcodes', 'woo-sku-barcode' ),
-            __( 'Barcodes', 'woo-sku-barcode' ),
+            __( 'Print Barcodes', 'sku-barcode-manager-for-woocommerce' ),
+            __( 'Barcodes', 'sku-barcode-manager-for-woocommerce' ),
             'manage_woocommerce',
             self::MENU_SLUG,
             [ $this, 'render_admin_page' ]
@@ -106,8 +106,8 @@ class Admin {
 
         add_submenu_page(
             'woocommerce',
-            __( 'Barcode Settings', 'woo-sku-barcode' ),
-            __( 'Barcode Settings', 'woo-sku-barcode' ),
+            __( 'Barcode Settings', 'sku-barcode-manager-for-woocommerce' ),
+            __( 'Barcode Settings', 'sku-barcode-manager-for-woocommerce' ),
             'manage_woocommerce',
             'wsbm-settings',
             [ $this, 'render_settings_page' ]
@@ -119,14 +119,14 @@ class Admin {
 
         add_settings_section(
             'wsbm_general_section',
-            __( 'General Options', 'woo-sku-barcode' ),
+            __( 'General Options', 'sku-barcode-manager-for-woocommerce' ),
             '__return_false',
             'wsbm_settings'
         );
 
         add_settings_field(
             'default_label',
-            __( 'Default label size', 'woo-sku-barcode' ),
+            __( 'Default label size', 'sku-barcode-manager-for-woocommerce' ),
             [ $this, 'render_default_label_field' ],
             'wsbm_settings',
             'wsbm_general_section'
@@ -134,7 +134,7 @@ class Admin {
 
         add_settings_field(
             'default_fields',
-            __( 'Default fields to print', 'woo-sku-barcode' ),
+            __( 'Default fields to print', 'sku-barcode-manager-for-woocommerce' ),
             [ $this, 'render_default_fields_field' ],
             'wsbm_settings',
             'wsbm_general_section'
@@ -142,7 +142,7 @@ class Admin {
 
         add_settings_field(
             'print_per_stock',
-            __( 'Print per stock by default', 'woo-sku-barcode' ),
+            __( 'Print per stock by default', 'sku-barcode-manager-for-woocommerce' ),
             [ $this, 'render_print_per_stock_field' ],
             'wsbm_settings',
             'wsbm_general_section'
@@ -150,7 +150,7 @@ class Admin {
 
         add_settings_field(
             'max_labels_per_batch',
-            __( 'Maximum labels per batch', 'woo-sku-barcode' ),
+            __( 'Maximum labels per batch', 'sku-barcode-manager-for-woocommerce' ),
             [ $this, 'render_max_labels_field' ],
             'wsbm_settings',
             'wsbm_general_section'
@@ -216,33 +216,35 @@ class Admin {
     }
 
     public function maybe_render_notices() : void {
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Admin notice state is read-only output and values are sanitized below.
-        $notice = isset( $_GET['wsbm_notice'] ) ? sanitize_text_field( wp_unslash( $_GET['wsbm_notice'] ) ) : '';
+        $notice = filter_input( INPUT_GET, 'wsbm_notice', FILTER_SANITIZE_STRING );
+        $notice = $notice ? sanitize_text_field( $notice ) : '';
 
         if ( 'sku-generated' === $notice ) {
-            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Count parameter is read-only and sanitized here.
-            $count = isset( $_GET['wsbm_count'] ) ? absint( wp_unslash( $_GET['wsbm_count'] ) ) : 0;
+            $count_param = filter_input( INPUT_GET, 'wsbm_count', FILTER_VALIDATE_INT );
+            $count       = $count_param ? absint( $count_param ) : 0;
             /* translators: %d: number of SKUs that were generated. */
+            $message = sprintf( _n( '%d SKU generated.', '%d SKUs generated.', $count, 'sku-barcode-manager-for-woocommerce' ), $count );
             printf(
                 '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
-                esc_html( sprintf( _n( '%d SKU generated.', '%d SKUs generated.', $count, 'woo-sku-barcode' ), $count ) )
+                esc_html( $message )
             );
         }
 
         if ( 'cache-cleared' === $notice ) {
-            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Count parameter is read-only and sanitized here.
-            $count = isset( $_GET['wsbm_count'] ) ? absint( wp_unslash( $_GET['wsbm_count'] ) ) : 0;
+            $count_param = filter_input( INPUT_GET, 'wsbm_count', FILTER_VALIDATE_INT );
+            $count       = $count_param ? absint( $count_param ) : 0;
             /* translators: %d: number of cached barcode images removed. */
+            $message = sprintf( _n( '%d cached barcode removed.', '%d cached barcodes removed.', $count, 'sku-barcode-manager-for-woocommerce' ), $count );
             printf(
                 '<div class="notice notice-info is-dismissible"><p>%s</p></div>',
-                esc_html( sprintf( _n( '%d cached barcode removed.', '%d cached barcodes removed.', $count, 'woo-sku-barcode' ), $count ) )
+                esc_html( $message )
             );
         }
     }
 
     public function handle_clear_cache() : void {
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
-            wp_die( esc_html__( 'You do not have permission to perform this action.', 'woo-sku-barcode' ) );
+            wp_die( esc_html__( 'You do not have permission to perform this action.', 'sku-barcode-manager-for-woocommerce' ) );
         }
 
         check_admin_referer( 'wsbm_clear_cache' );
@@ -264,17 +266,17 @@ class Admin {
 
     public function render_admin_page() : void {
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
-            wp_die( esc_html__( 'You do not have permission to access this page.', 'woo-sku-barcode' ) );
+            wp_die( esc_html__( 'You do not have permission to access this page.', 'sku-barcode-manager-for-woocommerce' ) );
         }
 
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Query params only prefill the UI and are sanitized.
-        $pid     = isset( $_GET['product_id'] ) ? absint( $_GET['product_id'] ) : 0;
+        $pid     = filter_input( INPUT_GET, 'product_id', FILTER_VALIDATE_INT );
+        $pid     = $pid ? absint( $pid ) : 0;
         $product = $pid ? wc_get_product( $pid ) : null;
 
         $requested_ids = [];
-        if ( ! empty( $_GET['items'] ) ) {
-            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Items parameter preselects checkboxes and is sanitized.
-            $raw = explode( ',', sanitize_text_field( wp_unslash( $_GET['items'] ) ) );
+        $items_param  = filter_input( INPUT_GET, 'items', FILTER_SANITIZE_STRING ) ?: '';
+        if ( '' !== $items_param ) {
+            $raw = explode( ',', sanitize_text_field( $items_param ) );
             foreach ( $raw as $maybe_id ) {
                 $id = absint( $maybe_id );
                 if ( $id ) {
@@ -369,9 +371,9 @@ class Admin {
 
         $settings      = $this->manager->get_settings();
         $label_sizes   = [
-            '40x30'  => __( '40×30 mm (single column)', 'woo-sku-barcode' ),
-            '52x25'  => __( '52×25 mm (Avery L7161)', 'woo-sku-barcode' ),
-            '100x50' => __( '100×50 mm (thermal)', 'woo-sku-barcode' ),
+            '40x30'  => __( '40×30 mm (single column)', 'sku-barcode-manager-for-woocommerce' ),
+            '52x25'  => __( '52×25 mm (Avery L7161)', 'sku-barcode-manager-for-woocommerce' ),
+            '100x50' => __( '100×50 mm (thermal)', 'sku-barcode-manager-for-woocommerce' ),
         ];
         $field_options = [ 'name', 'price', 'barcode', 'sku' ];
 
@@ -380,7 +382,7 @@ class Admin {
 
     public function render_settings_page() : void {
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
-            wp_die( esc_html__( 'You do not have permission to access this page.', 'woo-sku-barcode' ) );
+            wp_die( esc_html__( 'You do not have permission to access this page.', 'sku-barcode-manager-for-woocommerce' ) );
         }
 
         $settings = $this->manager->get_settings();
@@ -390,9 +392,9 @@ class Admin {
     public function render_default_label_field() : void {
         $settings    = $this->manager->get_settings();
         $label_sizes = [
-            '40x30'  => __( '40×30 mm (single column)', 'woo-sku-barcode' ),
-            '52x25'  => __( '52×25 mm (Avery L7161)', 'woo-sku-barcode' ),
-            '100x50' => __( '100×50 mm (thermal)', 'woo-sku-barcode' ),
+            '40x30'  => __( '40×30 mm (single column)', 'sku-barcode-manager-for-woocommerce' ),
+            '52x25'  => __( '52×25 mm (Avery L7161)', 'sku-barcode-manager-for-woocommerce' ),
+            '100x50' => __( '100×50 mm (thermal)', 'sku-barcode-manager-for-woocommerce' ),
         ];
         ?>
         <select name="<?php echo esc_attr( Manager::OPTION_NAME ); ?>[default_label]">
@@ -421,7 +423,7 @@ class Admin {
         ?>
         <label>
             <input type="checkbox" name="<?php echo esc_attr( Manager::OPTION_NAME ); ?>[print_per_stock]" value="1" <?php checked( $settings['print_per_stock'] ); ?>>
-            <?php esc_html_e( 'Enable per-stock label printing by default', 'woo-sku-barcode' ); ?>
+            <?php esc_html_e( 'Enable per-stock label printing by default', 'sku-barcode-manager-for-woocommerce' ); ?>
         </label>
         <?php
     }
@@ -430,7 +432,7 @@ class Admin {
         $settings = $this->manager->get_settings();
         ?>
         <input type="number" min="1" step="1" name="<?php echo esc_attr( Manager::OPTION_NAME ); ?>[max_labels_per_batch]" value="<?php echo esc_attr( $settings['max_labels_per_batch'] ); ?>">
-        <p class="description"><?php esc_html_e( 'Maximum number of labels that can be generated in a single batch.', 'woo-sku-barcode' ); ?></p>
+        <p class="description"><?php esc_html_e( 'Maximum number of labels that can be generated in a single batch.', 'sku-barcode-manager-for-woocommerce' ); ?></p>
         <?php
     }
 }
